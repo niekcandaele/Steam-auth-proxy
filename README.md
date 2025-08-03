@@ -50,7 +50,7 @@ docker run -d \
   -e OIDC_CLIENT_ID=your_client_id \
   -e OIDC_CLIENT_SECRET=your_client_secret \
   -p 19000:19000 \
-  ghcr.io/yourusername/steam-auth-proxy
+  ghcr.io/niekcandaele/steam-auth-proxy:latest
 ```
 
 ### 3. Configure your IDP
@@ -75,7 +75,6 @@ That's it! Your users can now login with Steam.
 | `OIDC_CLIENT_SECRET` | The client secret for your OIDC application. | ✅ |
 | `PORT` | Port to run the proxy on. | ❌ (default: 19000) |
 | `LOCAL_HTTPS_ENABLED` | Enable self-signed HTTPS for local development. | ❌ (default: false) |
-| `NODE_TLS_REJECT_UNAUTHORIZED` | Disable SSL certificate validation for outbound requests. **For local development only.** | ❌ (default: 1) |
 
 ### Using with Popular IDPs
 
