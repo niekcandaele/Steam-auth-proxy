@@ -46,10 +46,10 @@ Visit https://steamcommunity.com/dev/apikey to get your API key.
 ```bash
 docker run -d \
   -e STEAM_API_KEY=your_steam_api_key \
-  -e CLIENT_ID=your_client_id \
-  -e CLIENT_SECRET=your_client_secret \
-  -e REDIRECT_URI=https://your-idp.com/auth/callback \
-  -p 8080:8080 \
+  -e BASE_URL=https://your-proxy-host.com \
+  -e OIDC_CLIENT_ID=your_client_id \
+  -e OIDC_CLIENT_SECRET=your_client_secret \
+  -p 19000:19000 \
   ghcr.io/yourusername/steam-auth-proxy
 ```
 
@@ -57,9 +57,9 @@ docker run -d \
 
 Add a new OpenID Connect provider with these endpoints:
 
-- **Discovery URL**: `http://your-proxy-host:8080/.well-known/openid-configuration`
-- **Client ID**: The CLIENT_ID you set above
-- **Client Secret**: The CLIENT_SECRET you set above
+- **Discovery URL**: `https://your-proxy-host.com/.well-known/openid-configuration`
+- **Client ID**: The OIDC_CLIENT_ID you set above
+- **Client Secret**: The OIDC_CLIENT_SECRET you set above
 
 That's it! Your users can now login with Steam.
 
@@ -69,12 +69,13 @@ That's it! Your users can now login with Steam.
 
 | Variable | Description | Required |
 |----------|-------------|----------|
-| `STEAM_API_KEY` | Your Steam Web API key | ✅ |
-| `CLIENT_ID` | OAuth client ID for your IDP | ✅ |
-| `CLIENT_SECRET` | OAuth client secret for your IDP | ✅ |
-| `REDIRECT_URI` | Callback URL(s) from your IDP (comma-separated) | ✅ |
-| `PORT` | Port to run the proxy on | ❌ (default: 8080) |
-| `BASE_URL` | Public URL of the proxy | ❌ (default: http://localhost:8080) |
+| `BASE_URL` | The public-facing URL of your proxy (e.g., `https://devbox:19000`). This is critical for Steam to communicate with the proxy. | ✅ |
+| `STEAM_API_KEY` | Your Steam Web API key. | ✅ |
+| `OIDC_CLIENT_ID` | The client ID for your OIDC application. | ✅ |
+| `OIDC_CLIENT_SECRET` | The client secret for your OIDC application. | ✅ |
+| `PORT` | Port to run the proxy on. | ❌ (default: 19000) |
+| `LOCAL_HTTPS_ENABLED` | Enable self-signed HTTPS for local development. | ❌ (default: false) |
+| `NODE_TLS_REJECT_UNAUTHORIZED` | Disable SSL certificate validation for outbound requests. **For local development only.** | ❌ (default: 1) |
 
 ### Using with Popular IDPs
 
@@ -84,7 +85,7 @@ That's it! Your users can now login with Steam.
 1. In Keycloak admin, go to Identity Providers
 2. Add provider → OpenID Connect v1.0
 3. Set Discovery URL to your proxy's `/.well-known/openid-configuration`
-4. Enter your CLIENT_ID and CLIENT_SECRET
+4. Enter your OIDC_CLIENT_ID and OIDC_CLIENT_SECRET
 5. Save and test
 
 </details>
@@ -94,7 +95,7 @@ That's it! Your users can now login with Steam.
 
 1. In Ory Console, go to Social Sign In
 2. Add Generic OpenID Connect Provider
-3. Set Issuer URL to your proxy's base URL
+3. Set Issuer URL to your proxy's `BASE_URL`
 4. Configure client credentials
 5. Map claims as needed
 
@@ -127,7 +128,7 @@ That's it! Your users can now login with Steam.
 - **Never expose your Steam API key** - The proxy keeps it server-side
 - **Use HTTPS in production** - Put the proxy behind a reverse proxy with TLS
 - **Validate redirect URIs** - The proxy only allows pre-configured callbacks
-- **Rotate secrets regularly** - Update CLIENT_SECRET periodically
+- **Rotate secrets regularly** - Update OIDC_CLIENT_SECRET periodically
 - **Monitor for abuse** - Steam API has rate limits
 
 ## API Endpoints
@@ -153,9 +154,13 @@ npm install
 
 # Set environment variables
 cp .env.example .env
-# Edit .env with your configuration
+# Edit .env with your configuration, making sure to set BASE_URL
 
-# Run in development
+# Run in development (HTTP)
+npm run dev
+
+# Run in development (HTTPS)
+# Set LOCAL_HTTPS_ENABLED=true in your .env file
 npm run dev
 ```
 
@@ -177,6 +182,9 @@ Your IDP might be caching the discovery document. Clear the cache or wait for it
 ### "Authentication failed" errors
 Check that your STEAM_API_KEY is valid and not rate-limited.
 
+### "No providers found for the given identifier" error
+This means Steam rejected the authentication request. Ensure that your `BASE_URL` is set correctly in your `.env` file and is a publicly accessible address that Steam's servers can reach. For local development, this means using a service like ngrok or a similar tunneling tool to expose your local server to the internet.
+
 ### User profile missing data
 Steam only provides limited data through OpenID. The proxy returns all available information.
 
@@ -197,3 +205,4 @@ MIT License - see LICENSE file for details
 ---
 
 **Not affiliated with Valve Corporation or Steam.**
+

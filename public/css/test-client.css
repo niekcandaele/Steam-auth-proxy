@@ -1,0 +1,9 @@
+body {
+  font-family: sans-serif;
+}
+
+pre {
+  background-color: #f4f4f4;
+  padding: 1em;
+  border: 1px solid #ccc;
+}
