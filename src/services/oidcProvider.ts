@@ -4,6 +4,7 @@ import { generateSecureCode, generateKeyPair } from './crypto';
 import { codeStore, tokenStore } from './storage';
 import { sanitize, formatTimeRemaining } from '../utils/logging';
 import logger from '../utils/logger';
+import { config } from '../config';
 
 const { privateKey, publicKey } = generateKeyPair();
 
@@ -73,7 +74,7 @@ export const validateAuthCode = (code: string, clientId: string): AuthCodeData |
 
 export const generateIdToken = async (user: SteamUser, client: OIDCClient, nonce?: string): Promise<string> => {
   const claims: IDTokenClaims & JWTPayload = {
-    iss: process.env.OIDC_ISSUER || '',
+    iss: config.oidcIssuer,
     sub: user.steamid,
     aud: client.client_id,
     exp: Math.floor(Date.now() / 1000) + 3600, // 1 hour
@@ -86,7 +87,7 @@ export const generateIdToken = async (user: SteamUser, client: OIDCClient, nonce
 
   logger.debug('Generating ID token', {
     context: 'OIDCProvider',
-    issuer: process.env.OIDC_ISSUER,
+    issuer: config.oidcIssuer,
     subject: user.steamid,
     audience: sanitize(client.client_id, 'client'),
     has_nonce: !!nonce,
@@ -96,7 +97,7 @@ export const generateIdToken = async (user: SteamUser, client: OIDCClient, nonce
   const token = await new SignJWT(claims)
     .setProtectedHeader({ alg: 'RS256' })
     .setIssuedAt()
-    .setIssuer(process.env.OIDC_ISSUER || '')
+    .setIssuer(config.oidcIssuer)
     .setAudience(client.client_id)
     .setExpirationTime('1h')
     .sign(privateKey);
