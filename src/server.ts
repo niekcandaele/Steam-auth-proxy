@@ -34,6 +34,14 @@ app.use(session({
 app.use(oidcRoutes);
 app.use(steamCallbackRoutes);
 
+app.get('/health', (req, res) => {
+  res.status(200).json({
+    status: 'healthy',
+    timestamp: new Date().toISOString(),
+    service: 'steam-auth-proxy'
+  });
+});
+
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../public/test-client.html'));
 });
