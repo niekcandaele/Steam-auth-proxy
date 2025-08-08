@@ -47,7 +47,6 @@ Visit https://steamcommunity.com/dev/apikey to get your API key.
 docker run -d \
   -e STEAM_API_KEY=your_steam_api_key \
   -e BASE_URL=https://your-proxy-host.com \
-  -e OIDC_CLIENT_ID=your_client_id \
   -e OIDC_CLIENT_SECRET=your_client_secret \
   -p 19000:19000 \
   ghcr.io/niekcandaele/steam-auth-proxy:latest
@@ -58,8 +57,8 @@ docker run -d \
 Add a new OpenID Connect provider with these endpoints:
 
 - **Discovery URL**: `https://your-proxy-host.com/.well-known/openid-configuration`
-- **Client ID**: The OIDC_CLIENT_ID you set above
-- **Client Secret**: The OIDC_CLIENT_SECRET you set above
+- **Client ID**: `steam-auth-client` (fixed value)
+- **Client Secret**: The OIDC_CLIENT_SECRET you set above (or any value if not set)
 
 That's it! Your users can now login with Steam.
 
@@ -71,10 +70,11 @@ That's it! Your users can now login with Steam.
 |----------|-------------|----------|
 | `BASE_URL` | The public-facing URL of your proxy (e.g., `https://devbox:19000`). This is critical for Steam to communicate with the proxy. | ✅ |
 | `STEAM_API_KEY` | Your Steam Web API key. | ✅ |
-| `OIDC_CLIENT_ID` | The client ID for your OIDC application. | ✅ |
-| `OIDC_CLIENT_SECRET` | The client secret for your OIDC application. | ✅ |
+| `OIDC_CLIENT_SECRET` | The client secret for OIDC authentication. If not provided, a secure random secret is generated. | ❌ (auto-generated) |
 | `PORT` | Port to run the proxy on. | ❌ (default: 19000) |
 | `LOCAL_HTTPS_ENABLED` | Enable self-signed HTTPS for local development. | ❌ (default: false) |
+
+**Note:** The client ID is fixed as `steam-auth-client` for simplicity. Configure your IDP to use this value.
 
 ### Using with Popular IDPs
 
@@ -84,7 +84,7 @@ That's it! Your users can now login with Steam.
 1. In Keycloak admin, go to Identity Providers
 2. Add provider → OpenID Connect v1.0
 3. Set Discovery URL to your proxy's `/.well-known/openid-configuration`
-4. Enter your OIDC_CLIENT_ID and OIDC_CLIENT_SECRET
+4. Set Client ID to `steam-auth-client` and enter your OIDC_CLIENT_SECRET
 5. Save and test
 
 </details>
@@ -95,7 +95,7 @@ That's it! Your users can now login with Steam.
 1. In Ory Console, go to Social Sign In
 2. Add Generic OpenID Connect Provider
 3. Set Issuer URL to your proxy's `BASE_URL`
-4. Configure client credentials
+4. Set Client ID to `steam-auth-client` and configure client secret
 5. Map claims as needed
 
 </details>
