@@ -9,6 +9,17 @@ if (!process.env.BASE_URL) {
 const port = process.env.PORT || 19000;
 const localHttps = process.env.LOCAL_HTTPS_ENABLED === 'true';
 
+// Parse allowed redirect URIs from environment
+// If not specified, default to BASE_URL for backward compatibility
+const parseRedirectUris = (): string[] => {
+  const allowedUris = process.env.ALLOWED_REDIRECT_URIS;
+  if (allowedUris) {
+    return allowedUris.split(',').map(uri => uri.trim()).filter(uri => uri.length > 0);
+  }
+  // Default to BASE_URL if ALLOWED_REDIRECT_URIS not specified
+  return [process.env.BASE_URL as string];
+};
+
 export const config = {
   port,
   localHttps,
@@ -19,6 +30,7 @@ export const config = {
   oidcIssuer: process.env.BASE_URL as string,
   sessionSecret: process.env.SESSION_SECRET,
   sessionName: process.env.SESSION_NAME,
+  allowedRedirectUris: parseRedirectUris(),
 };
 
 // Log configuration on startup (sanitized)
@@ -34,6 +46,10 @@ console.log(`HTTPS Enabled: ${config.localHttps}`);
 console.log(`Base URL: ${config.baseUrl}`);
 console.log(`Steam Return URL: ${config.steamReturnUrl}`);
 console.log(`OIDC Issuer: ${config.oidcIssuer}`);
+console.log(`Allowed Redirect URIs: ${config.allowedRedirectUris.length} configured`);
+config.allowedRedirectUris.forEach((uri, index) => {
+  console.log(`  [${index + 1}] ${uri}`);
+});
 console.log(`Steam API Key: ${sanitize(config.steamApiKey, 'key')}`);
 console.log(`Session Secret: ${config.sessionSecret ? '[CONFIGURED]' : '[NOT SET]'}`);
 console.log(`Session Name: ${config.sessionName || 'steam_auth_session'}`);

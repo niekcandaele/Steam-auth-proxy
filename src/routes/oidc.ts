@@ -18,7 +18,7 @@ const CLIENT_SECRET = process.env.OIDC_CLIENT_SECRET || generateSecureCode();
 clientStore.set(CLIENT_ID, {
   client_id: CLIENT_ID,
   client_secret: CLIENT_SECRET,
-  redirect_uris: [config.baseUrl],
+  redirect_uris: config.allowedRedirectUris,
   grant_types: ['authorization_code'],
   response_types: ['code'],
   scope: 'openid profile'
@@ -26,7 +26,8 @@ clientStore.set(CLIENT_ID, {
 
 logDebug('OIDC', 'Client initialized', {
   client_id: CLIENT_ID,
-  redirect_uri: config.baseUrl,
+  redirect_uris_count: config.allowedRedirectUris.length,
+  redirect_uris: config.allowedRedirectUris,
   client_secret: sanitizeSecret(CLIENT_SECRET)
 });
 

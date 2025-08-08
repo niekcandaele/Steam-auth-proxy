@@ -47,6 +47,7 @@ Visit https://steamcommunity.com/dev/apikey to get your API key.
 docker run -d \
   -e STEAM_API_KEY=your_steam_api_key \
   -e BASE_URL=https://your-proxy-host.com \
+  -e ALLOWED_REDIRECT_URIS=https://your-app.com/callback,http://localhost:3000/callback \
   -e OIDC_CLIENT_SECRET=your_client_secret \
   -p 19000:19000 \
   ghcr.io/niekcandaele/steam-auth-proxy:latest
@@ -70,11 +71,14 @@ That's it! Your users can now login with Steam.
 |----------|-------------|----------|
 | `BASE_URL` | The public-facing URL of your proxy (e.g., `https://devbox:19000`). This is critical for Steam to communicate with the proxy. | ✅ |
 | `STEAM_API_KEY` | Your Steam Web API key. | ✅ |
+| `ALLOWED_REDIRECT_URIS` | Comma-separated list of allowed redirect URIs for OIDC callbacks. If not specified, defaults to BASE_URL. | ❌ (default: BASE_URL) |
 | `OIDC_CLIENT_SECRET` | The client secret for OIDC authentication. If not provided, a secure random secret is generated. | ❌ (auto-generated) |
 | `PORT` | Port to run the proxy on. | ❌ (default: 19000) |
 | `LOCAL_HTTPS_ENABLED` | Enable self-signed HTTPS for local development. | ❌ (default: false) |
 
-**Note:** The client ID is fixed as `steam-auth-client` for simplicity. Configure your IDP to use this value.
+**Notes:** 
+- The client ID is fixed as `steam-auth-client` for simplicity. Configure your IDP to use this value.
+- You can configure multiple redirect URIs using `ALLOWED_REDIRECT_URIS` for different environments (development, staging, production) or multiple applications.
 
 ### Using with Popular IDPs
 
