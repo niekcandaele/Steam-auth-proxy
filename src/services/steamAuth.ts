@@ -3,12 +3,14 @@ import axios from 'axios';
 import openid, { OpenIdError } from 'openid';
 import { config } from '../config';
 import { Request } from 'express';
-import { logDebug, logError, sanitize } from '../utils/logging';
+import { sanitize } from '../utils/logging';
+import logger from '../utils/logger';
 
 const STEAM_OPENID_URL = 'https://steamcommunity.com/openid';
 
 export const getAuthUrl = async (returnUrl: string): Promise<string> => {
-  logDebug('SteamAuth', 'getAuthUrl called', { 
+  logger.debug('getAuthUrl called', { 
+    context: 'SteamAuth',
     returnUrl: returnUrl,
     steamRealm: config.steamRealm,
     steamOpenIdUrl: STEAM_OPENID_URL
@@ -23,7 +25,8 @@ export const getAuthUrl = async (returnUrl: string): Promise<string> => {
     []     // extensions
   );
 
-  logDebug('SteamAuth', 'RelyingParty created', {
+  logger.debug('RelyingParty created', {
+    context: 'SteamAuth',
     stateless: true,
     strict: true
   });
@@ -31,16 +34,20 @@ export const getAuthUrl = async (returnUrl: string): Promise<string> => {
   return new Promise((resolve, reject) => {
     relyingParty.authenticate(STEAM_OPENID_URL, false, (err: OpenIdError | null, authUrl?: string | null) => {
       if (err) {
-        logError('SteamAuth', 'Error from openid.authenticate', err);
+        logger.error('Error from openid.authenticate', {
+          context: 'SteamAuth',
+          error: err.message
+        });
         return reject(new Error(err.message));
       }
       if (!authUrl) {
-        logError('SteamAuth', 'Authentication URL not generated', {});
+        logger.error('Authentication URL not generated', { context: 'SteamAuth' });
         return reject(new Error('Authentication URL not generated.'));
       }
-      logDebug('SteamAuth', 'Auth URL generated successfully', {
-        url_length: authUrl.length,
-        has_openid_params: authUrl.includes('openid')
+      logger.debug('Auth URL generated successfully', {
+        context: 'SteamAuth',
+        urlLength: authUrl.length,
+        hasOpenidParams: authUrl.includes('openid')
       });
       resolve(authUrl);
     });
@@ -53,10 +60,11 @@ export const verifyAssertion = async (requestOrParams: Request | OpenIDParams): 
     ? (requestOrParams.query['openid.return_to'] as string)
     : requestOrParams['openid.return_to'];
   
-  logDebug('SteamAuth', 'verifyAssertion called', {
+  logger.debug('verifyAssertion called', {
+    context: 'SteamAuth',
     returnUrl: returnUrl,
     isRequest: 'method' in requestOrParams,
-    has_claimed_id: 'method' in requestOrParams 
+    hasClaimedId: 'method' in requestOrParams 
       ? !!requestOrParams.query['openid.claimed_id']
       : !!requestOrParams['openid.claimed_id']
   });
@@ -70,24 +78,29 @@ export const verifyAssertion = async (requestOrParams: Request | OpenIDParams): 
   );
 
   return new Promise((resolve, reject) => {
-    logDebug('SteamAuth', 'Calling verifyAssertion');
+    logger.debug('Calling verifyAssertion', { context: 'SteamAuth' });
     
     relyingParty.verifyAssertion(requestOrParams, (err: OpenIdError | null, result?: { authenticated: boolean; claimedIdentifier?: string; }) => {
       if (err) {
-        logError('SteamAuth', 'Error verifying assertion', err);
+        logger.error('Error verifying assertion', {
+          context: 'SteamAuth',
+          error: err.message
+        });
         return reject(new Error(err.message));
       }
       if (!result || !result.authenticated || !result.claimedIdentifier) {
-        logError('SteamAuth', 'Invalid verification result', {
-          has_result: !!result,
+        logger.error('Invalid verification result', {
+          context: 'SteamAuth',
+          hasResult: !!result,
           authenticated: result?.authenticated,
-          has_claimedIdentifier: !!result?.claimedIdentifier
+          hasClaimedIdentifier: !!result?.claimedIdentifier
         });
         return reject(new Error('Failed to verify assertion.'));
       }
       
       const steamId = result.claimedIdentifier.split('/').pop() || '';
-      logDebug('SteamAuth', 'Successfully verified Steam ID', {
+      logger.debug('Successfully verified Steam ID', {
+        context: 'SteamAuth',
         steamId: steamId,
         claimedIdentifier: result.claimedIdentifier
       });
@@ -99,34 +112,40 @@ export const verifyAssertion = async (requestOrParams: Request | OpenIDParams): 
 export const getUserInfo = async (steamId: string): Promise<SteamUser> => {
   const apiKey = config.steamApiKey;
   if (!apiKey) {
-    logError('SteamAuth', 'Steam API key not configured', {});
+    logger.error('Steam API key not configured', { context: 'SteamAuth' });
     throw new Error('Steam API key not configured.');
   }
 
   const apiUrl = `http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${apiKey}&steamids=${steamId}`;
   
-  logDebug('SteamAuth', 'Fetching Steam user info', {
+  logger.debug('Fetching Steam user info', {
+    context: 'SteamAuth',
     steamId: steamId,
-    api_key: sanitize(apiKey, 'key'),
+    apiKey: sanitize(apiKey, 'key'),
     url: apiUrl.replace(apiKey, sanitize(apiKey, 'key'))
   });
 
   try {
     const response = await axios.get(apiUrl);
     
-    logDebug('SteamAuth', 'Steam API response received', {
+    logger.debug('Steam API response received', {
+      context: 'SteamAuth',
       status: response.status,
-      has_players: !!response.data?.response?.players,
-      player_count: response.data?.response?.players?.length || 0
+      hasPlayers: !!response.data?.response?.players,
+      playerCount: response.data?.response?.players?.length || 0
     });
 
     const player = response.data.response.players[0];
     if (!player) {
-      logError('SteamAuth', 'User not found in Steam API response', { steamId });
+      logger.error('User not found in Steam API response', { 
+        context: 'SteamAuth',
+        steamId 
+      });
       throw new Error('User not found.');
     }
 
-    logDebug('SteamAuth', 'User info retrieved', {
+    logger.debug('User info retrieved', {
+      context: 'SteamAuth',
       steamId: player.steamid,
       personaname: player.personaname,
       profileurl: player.profileurl
@@ -135,13 +154,17 @@ export const getUserInfo = async (steamId: string): Promise<SteamUser> => {
     return player;
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      logError('SteamAuth', 'Steam API request failed', {
+      logger.error('Steam API request failed', {
+        context: 'SteamAuth',
         status: error.response?.status,
         statusText: error.response?.statusText,
         data: error.response?.data
       });
     } else {
-      logError('SteamAuth', 'Unexpected error fetching user info', error);
+      logger.error('Unexpected error fetching user info', {
+        context: 'SteamAuth',
+        error: error instanceof Error ? error.message : error
+      });
     }
     throw error;
   }

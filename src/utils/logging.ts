@@ -45,32 +45,3 @@ export const formatTimeRemaining = (expiresAt: number): string => {
   }
   return `${seconds}s`;
 };
-
-/**
- * Logs debug information with a consistent prefix
- * @param context - The context/module name
- * @param message - The message to log
- * @param data - Optional data object to log
- */
-export const logDebug = (context: string, message: string, data?: any): void => {
-  const prefix = `[${context}]`;
-  if (data) {
-    console.log(`${prefix} ${message}:`, data);
-  } else {
-    console.log(`${prefix} ${message}`);
-  }
-};
-
-/**
- * Logs error information with a consistent prefix
- * @param context - The context/module name
- * @param message - The error message
- * @param error - The error object
- */
-export const logError = (context: string, message: string, error: any): void => {
-  const prefix = `[${context}]`;
-  console.error(`${prefix} ${message}:`, error);
-  if (error?.stack) {
-    console.error(`${prefix} Stack trace:`, error.stack);
-  }
-};

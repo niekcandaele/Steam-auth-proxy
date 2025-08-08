@@ -1,8 +1,11 @@
 import dotenv from 'dotenv';
+import logger from './utils/logger';
+import { sanitize } from './utils/logging';
+
 dotenv.config();
 
 if (!process.env.BASE_URL) {
-  console.error('FATAL ERROR: BASE_URL is not defined. Please set it in your .env file.');
+  logger.error('FATAL ERROR: BASE_URL is not defined. Please set it in your .env file.');
   process.exit(1);
 }
 
@@ -33,24 +36,16 @@ export const config = {
   allowedRedirectUris: parseRedirectUris(),
 };
 
-// Log configuration on startup (sanitized)
-const sanitize = (value: string | undefined, label: string = 'value'): string => {
-  if (!value) return '[not set]';
-  if (value.length <= 10) return `${label}[***]`;
-  return `${value.substring(0, 4)}****${value.substring(value.length - 4)}`;
-};
-
-console.log('=== Steam Auth Proxy Configuration ===');
-console.log(`Port: ${config.port}`);
-console.log(`HTTPS Enabled: ${config.localHttps}`);
-console.log(`Base URL: ${config.baseUrl}`);
-console.log(`Steam Return URL: ${config.steamReturnUrl}`);
-console.log(`OIDC Issuer: ${config.oidcIssuer}`);
-console.log(`Allowed Redirect URIs: ${config.allowedRedirectUris.length} configured`);
-config.allowedRedirectUris.forEach((uri, index) => {
-  console.log(`  [${index + 1}] ${uri}`);
+// Log configuration on startup
+logger.info('Steam Auth Proxy Configuration', {
+  port: config.port,
+  httpsEnabled: config.localHttps,
+  baseUrl: config.baseUrl,
+  steamReturnUrl: config.steamReturnUrl,
+  oidcIssuer: config.oidcIssuer,
+  allowedRedirectUris: config.allowedRedirectUris,
+  allowedRedirectUrisCount: config.allowedRedirectUris.length,
+  steamApiKey: sanitize(config.steamApiKey, 'key'),
+  sessionSecretConfigured: !!config.sessionSecret,
+  sessionName: config.sessionName || 'steam_auth_session'
 });
-console.log(`Steam API Key: ${sanitize(config.steamApiKey, 'key')}`);
-console.log(`Session Secret: ${config.sessionSecret ? '[CONFIGURED]' : '[NOT SET]'}`);
-console.log(`Session Name: ${config.sessionName || 'steam_auth_session'}`);
-console.log('=====================================');

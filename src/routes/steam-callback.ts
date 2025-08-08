@@ -2,44 +2,51 @@ import { Router } from 'express';
 import { verifyAssertion } from '../services/steamAuth';
 import { generateAuthCode } from '../services/oidcProvider';
 import { OpenIDParams } from '../types';
-import { logDebug, logError, sanitize } from '../utils/logging';
+import { sanitize } from '../utils/logging';
+import logger from '../utils/logger';
 
 const router = Router();
 
 router.get('/auth/steam/return', async (req, res) => {
-  logDebug('Steam', 'Callback received', {
-    query_params: Object.keys(req.query),
-    has_openid_params: !!req.query['openid.claimed_id']
+  logger.debug('Callback received', {
+    context: 'Steam',
+    queryParams: Object.keys(req.query),
+    hasOpenidParams: !!req.query['openid.claimed_id']
   });
   
   try {
-    logDebug('Steam', 'Verifying Steam assertion');
+    logger.debug('Verifying Steam assertion', { context: 'Steam' });
     const steamId = await verifyAssertion(req);
-    logDebug('Steam', 'Steam ID verified', { steamId });
+    logger.debug('Steam ID verified', { 
+      context: 'Steam',
+      steamId 
+    });
     
     // @ts-ignore
     const { client_id, redirect_uri, state, nonce } = req.session.oidc || {};
     // @ts-ignore
     const sessionData = req.session.oidc;
     
-    logDebug('Steam', 'Retrieved session data', {
-      client_id: sanitize(client_id, 'client'),
-      redirect_uri: redirect_uri,
-      has_state: !!state,
-      has_nonce: !!nonce,
-      session_exists: !!sessionData
+    logger.debug('Retrieved session data', {
+      context: 'Steam',
+      clientId: sanitize(client_id, 'client'),
+      redirectUri: redirect_uri,
+      hasState: !!state,
+      hasNonce: !!nonce,
+      sessionExists: !!sessionData
     });
     
     if (!client_id || !redirect_uri) {
-      logError('Steam', 'Missing OIDC session data', {
-        has_client_id: !!client_id,
-        has_redirect_uri: !!redirect_uri,
-        session_id: sanitize(req.sessionID, 'session')
+      logger.error('Missing OIDC session data', {
+        context: 'Steam',
+        hasClientId: !!client_id,
+        hasRedirectUri: !!redirect_uri,
+        sessionId: sanitize(req.sessionID, 'session')
       });
       return res.status(400).send('Session expired or invalid. Please try logging in again.');
     }
     
-    logDebug('Steam', 'Generating auth code');
+    logger.debug('Generating auth code', { context: 'Steam' });
     const code = generateAuthCode(steamId, client_id, redirect_uri, nonce);
     
     const url = new URL(redirect_uri);
@@ -48,16 +55,20 @@ router.get('/auth/steam/return', async (req, res) => {
       url.searchParams.append('state', state);
     }
     
-    logDebug('Steam', 'Redirecting to client', {
-      redirect_uri: redirect_uri,
+    logger.debug('Redirecting to client', {
+      context: 'Steam',
+      redirectUri: redirect_uri,
       code: sanitize(code, 'code'),
       state: state,
-      full_url: url.toString()
+      fullUrl: url.toString()
     });
     
     res.redirect(url.toString());
   } catch (error) {
-    logError('Steam', 'Error in callback', error);
+    logger.error('Error in callback', {
+      context: 'Steam',
+      error: error instanceof Error ? error.message : error
+    });
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     res.status(500).send(`Error verifying Steam assertion: ${errorMessage}`);
   }

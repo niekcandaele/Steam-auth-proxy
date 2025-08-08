@@ -7,12 +7,17 @@ import cors from 'cors';
 import path from 'path';
 import https from 'https';
 import http from 'http';
+import logger from './utils/logger';
 
 const app = express();
 
 app.use(cors());
 app.use((req: Request, res: Response, next: NextFunction) => {
-  console.log(`${req.method} ${req.url}`);
+  logger.info('HTTP Request', {
+    method: req.method,
+    url: req.url,
+    ip: req.ip
+  });
   next();
 });
 
@@ -48,7 +53,12 @@ app.get('/', (req, res) => {
 
 // Error handling middleware
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-  console.error(err.stack);
+  logger.error('Unhandled error', {
+    error: err.message,
+    stack: err.stack,
+    url: req.url,
+    method: req.method
+  });
   res.status(500).send('Something broke!');
 });
 
@@ -58,30 +68,30 @@ if (config.localHttps) {
   import('self-signed').then(selfsigned => {
     const pems = selfsigned.default.generate(null, { days: 365 });
     server = https.createServer({ key: pems.private, cert: pems.cert }, app).listen(config.port, () => {
-      console.log(`Server is running on https://localhost:${config.port}`);
+      logger.info(`Server is running on https://localhost:${config.port}`);
     });
   }).catch(err => {
-    console.error('Failed to load self-signed module:', err);
-    console.error('Falling back to HTTP');
+    logger.error('Failed to load self-signed module', { error: err.message });
+    logger.warn('Falling back to HTTP');
     server = app.listen(config.port, () => {
-      console.log(`Server is running on http://localhost:${config.port}`);
+      logger.info(`Server is running on http://localhost:${config.port}`);
     });
   });
 } else {
   server = app.listen(config.port, () => {
-    console.log(`Server is running on http://localhost:${config.port}`);
+    logger.info(`Server is running on http://localhost:${config.port}`);
   });
 }
 
 const gracefulShutdown = () => {
-  console.log('Shutting down gracefully...');
+  logger.info('Shutting down gracefully...');
   server.close(() => {
-    console.log('Closed out remaining connections.');
+    logger.info('Closed out remaining connections.');
     process.exit(0);
   });
 
   setTimeout(() => {
-    console.error('Could not close connections in time, forcefully shutting down');
+    logger.error('Could not close connections in time, forcefully shutting down');
     process.exit(1);
   }, 10000);
 };

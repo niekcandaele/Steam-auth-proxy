@@ -75,6 +75,7 @@ That's it! Your users can now login with Steam.
 | `OIDC_CLIENT_SECRET` | The client secret for OIDC authentication. If not provided, a secure random secret is generated. | ❌ (auto-generated) |
 | `PORT` | Port to run the proxy on. | ❌ (default: 19000) |
 | `LOCAL_HTTPS_ENABLED` | Enable self-signed HTTPS for local development. | ❌ (default: false) |
+| `LOG_LEVEL` | Logging level (error, warn, info, http, verbose, debug, silly). | ❌ (default: debug) |
 
 **Notes:** 
 - The client ID is fixed as `steam-auth-client` for simplicity. Configure your IDP to use this value.

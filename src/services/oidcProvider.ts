@@ -2,7 +2,8 @@ import { SteamUser, OIDCClient, AuthCodeData, IDTokenClaims } from '../types';
 import { SignJWT, importJWK, jwtVerify, JWTPayload } from 'jose';
 import { generateSecureCode, generateKeyPair } from './crypto';
 import { codeStore, tokenStore } from './storage';
-import { logDebug, logError, sanitize, formatTimeRemaining } from '../utils/logging';
+import { sanitize, formatTimeRemaining } from '../utils/logging';
+import logger from '../utils/logger';
 
 const { privateKey, publicKey } = generateKeyPair();
 
@@ -18,7 +19,8 @@ export const generateAuthCode = (steamId: string, clientId: string, redirectUri:
     expiresAt: Date.now() + 10 * 60 * 1000, // 10 minutes
   };
   
-  logDebug('OIDCProvider', 'Generating auth code', {
+  logger.debug('Generating auth code', {
+    context: 'OIDCProvider',
     code: sanitize(code, 'code'),
     steamId: steamId,
     clientId: sanitize(clientId, 'client'),
@@ -34,7 +36,8 @@ export const generateAuthCode = (steamId: string, clientId: string, redirectUri:
 export const validateAuthCode = (code: string, clientId: string): AuthCodeData | null => {
   const authCodeData = codeStore.get(code);
   
-  logDebug('OIDCProvider', 'Validating auth code', {
+  logger.debug('Validating auth code', {
+    context: 'OIDCProvider',
     code: sanitize(code, 'code'),
     clientId: sanitize(clientId, 'client'),
     code_found: !!authCodeData,
@@ -45,19 +48,25 @@ export const validateAuthCode = (code: string, clientId: string): AuthCodeData |
   
   if (!authCodeData || authCodeData.clientId !== clientId || authCodeData.expiresAt < Date.now()) {
     if (authCodeData) {
-      logError('OIDCProvider', 'Auth code validation failed', {
+      logger.error('Auth code validation failed', {
+        context: 'OIDCProvider',
         reason: authCodeData.clientId !== clientId ? 'client_mismatch' : 'expired',
         expected_client: sanitize(clientId, 'client'),
         actual_client: sanitize(authCodeData.clientId, 'client'),
         expired: authCodeData.expiresAt < Date.now()
       });
     } else {
-      logError('OIDCProvider', 'Auth code not found', { code: sanitize(code, 'code') });
+      logger.error('Auth code not found', { 
+        context: 'OIDCProvider',
+        code: sanitize(code, 'code') 
+      });
     }
     return null;
   }
   
-  logDebug('OIDCProvider', 'Auth code validated successfully, removing from store');
+  logger.debug('Auth code validated successfully, removing from store', {
+    context: 'OIDCProvider'
+  });
   codeStore.delete(code);
   return authCodeData;
 };
@@ -75,7 +84,8 @@ export const generateIdToken = async (user: SteamUser, client: OIDCClient, nonce
     ...(nonce && { nonce })
   };
 
-  logDebug('OIDCProvider', 'Generating ID token', {
+  logger.debug('Generating ID token', {
+    context: 'OIDCProvider',
     issuer: process.env.OIDC_ISSUER,
     subject: user.steamid,
     audience: sanitize(client.client_id, 'client'),
@@ -91,7 +101,8 @@ export const generateIdToken = async (user: SteamUser, client: OIDCClient, nonce
     .setExpirationTime('1h')
     .sign(privateKey);
     
-  logDebug('OIDCProvider', 'ID token generated', {
+  logger.debug('ID token generated', {
+    context: 'OIDCProvider',
     token_preview: sanitize(token, 'jwt')
   });
   
@@ -101,7 +112,8 @@ export const generateIdToken = async (user: SteamUser, client: OIDCClient, nonce
 export const generateAccessToken = (steamId: string): string => {
   const token = generateSecureCode();
   
-  logDebug('OIDCProvider', 'Generating access token', {
+  logger.debug('Generating access token', {
+    context: 'OIDCProvider',
     steamId: steamId,
     token: sanitize(token, 'token')
   });
@@ -113,14 +125,18 @@ export const generateAccessToken = (steamId: string): string => {
 export const validateAccessToken = async (token: string): Promise<string | null> => {
   const steamId = tokenStore.get(token);
   
-  logDebug('OIDCProvider', 'Validating access token', {
+  logger.debug('Validating access token', {
+    context: 'OIDCProvider',
     token: sanitize(token, 'token'),
     found: !!steamId,
     steamId: steamId || 'N/A'
   });
   
   if (!steamId) {
-    logError('OIDCProvider', 'Access token not found', { token: sanitize(token, 'token') });
+    logger.error('Access token not found', { 
+      context: 'OIDCProvider',
+      token: sanitize(token, 'token') 
+    });
     return null;
   }
   
