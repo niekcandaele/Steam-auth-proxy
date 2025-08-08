@@ -5,13 +5,19 @@ import { validateAuthCode, generateIdToken, generateAccessToken, validateAccessT
 import { exportJWK } from 'jose';
 import { clientStore } from '../services/storage';
 import { config } from '../config';
+import { logDebug, logError, sanitize, sanitizeSecret } from '../utils/logging';
 
 const router = Router();
 
 const loadClientConfig = (req: Request, res: Response, next: NextFunction) => {
   // In a real app, you would load this from a database
-  clientStore.set(config.oidcClientId || '', {
-    client_id: config.oidcClientId || '',
+  const clientId = config.oidcClientId || '';
+  logDebug('OIDC', 'Loading client config', { 
+    client_id: sanitize(clientId, 'client') 
+  });
+  
+  clientStore.set(clientId, {
+    client_id: clientId,
     client_secret: config.oidcClientSecret || '',
     redirect_uris: [config.baseUrl],
     grant_types: ['authorization_code'],
@@ -59,26 +65,52 @@ router.get('/.well-known/jwks.json', async (req, res) => {
 router.get('/authorize', async (req, res) => {
   const { client_id, redirect_uri, response_type, scope, state, nonce } = req.query;
 
+  logDebug('OIDC', '/authorize called', {
+    client_id: sanitize(client_id as string, 'client'),
+    redirect_uri: redirect_uri,
+    response_type: response_type,
+    scope: scope,
+    state: state,
+    nonce: nonce ? sanitize(nonce as string, 'nonce') : undefined
+  });
+
   const client = clientStore.get(client_id as string);
   if (!client) {
+    logError('OIDC', 'Client not found', { client_id: sanitize(client_id as string, 'client') });
     return sendOidcError(res, redirect_uri as string, 'unauthorized_client', 'Invalid client_id');
   }
+  logDebug('OIDC', 'Client validated successfully');
 
   if (!client.redirect_uris.includes(redirect_uri as string)) {
+    logError('OIDC', 'Invalid redirect_uri', { 
+      provided: redirect_uri,
+      allowed: client.redirect_uris 
+    });
     return sendOidcError(res, redirect_uri as string, 'invalid_request', 'Invalid redirect_uri');
   }
+  logDebug('OIDC', 'Redirect URI validated');
 
   if (response_type !== 'code') {
+    logError('OIDC', 'Unsupported response_type', { response_type });
     return sendOidcError(res, redirect_uri as string, 'unsupported_response_type', 'Invalid response_type');
   }
 
   try {
+    logDebug('OIDC', 'Generating Steam auth URL');
     const authUrl = await getAuthUrl(config.steamReturnUrl);
+    
     // @ts-ignore
     req.session.oidc = { client_id, redirect_uri, state, nonce };
+    logDebug('OIDC', 'Session data stored', {
+      client_id: sanitize(client_id as string, 'client'),
+      has_state: !!state,
+      has_nonce: !!nonce
+    });
+    
+    logDebug('OIDC', 'Redirecting to Steam auth');
     res.redirect(authUrl);
   } catch (error) {
-    console.error('Failed to generate Steam auth URL:', error);
+    logError('OIDC', 'Failed to generate Steam auth URL', error);
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     sendOidcError(res, redirect_uri as string, 'server_error', `Error generating Steam auth URL: ${errorMessage}`);
   }
@@ -87,24 +119,57 @@ router.get('/authorize', async (req, res) => {
 router.post('/token', async (req, res) => {
   const { grant_type, code, redirect_uri, client_id, client_secret } = req.body;
 
+  logDebug('OIDC', '/token called', {
+    grant_type: grant_type,
+    code: sanitize(code, 'code'),
+    redirect_uri: redirect_uri,
+    client_id: sanitize(client_id, 'client'),
+    client_secret: sanitizeSecret(client_secret)
+  });
+
   if (grant_type !== 'authorization_code') {
+    logError('OIDC', 'Invalid grant_type', { grant_type });
     return res.status(400).json({ error: 'invalid_grant' });
   }
 
   const client = clientStore.get(client_id as string);
   if (!client || client.client_secret !== client_secret) {
+    logError('OIDC', 'Client authentication failed', { 
+      client_id: sanitize(client_id, 'client'),
+      client_found: !!client,
+      secret_matches: client ? client.client_secret === client_secret : false
+    });
     return res.status(401).json({ error: 'invalid_client' });
   }
+  logDebug('OIDC', 'Client authenticated successfully');
 
   const authCodeData = validateAuthCode(code, client_id);
   if (!authCodeData || authCodeData.redirectUri !== redirect_uri) {
+    logError('OIDC', 'Auth code validation failed', {
+      code: sanitize(code, 'code'),
+      code_found: !!authCodeData,
+      redirect_uri_matches: authCodeData ? authCodeData.redirectUri === redirect_uri : false
+    });
     return res.status(400).json({ error: 'invalid_grant' });
   }
+  logDebug('OIDC', 'Auth code validated', {
+    steamId: authCodeData.steamId,
+    has_nonce: !!authCodeData.nonce
+  });
 
   try {
+    logDebug('OIDC', 'Fetching Steam user info', { steamId: authCodeData.steamId });
     const user = await getUserInfo(authCodeData.steamId);
+    
+    logDebug('OIDC', 'Generating tokens');
     const id_token = await generateIdToken(user, client, authCodeData.nonce);
     const access_token = generateAccessToken(authCodeData.steamId);
+
+    logDebug('OIDC', 'Tokens generated successfully', {
+      access_token: sanitize(access_token, 'token'),
+      id_token: sanitize(id_token, 'jwt'),
+      steamId: authCodeData.steamId
+    });
 
     res.json({
       access_token,
@@ -113,23 +178,42 @@ router.post('/token', async (req, res) => {
       id_token
     });
   } catch (error) {
+    logError('OIDC', 'Error generating tokens', error);
     res.status(500).json({ error: 'server_error' });
   }
 });
 
 router.get('/userinfo', async (req, res) => {
   const authHeader = req.headers.authorization;
+  
+  logDebug('OIDC', '/userinfo called', {
+    has_auth_header: !!authHeader,
+    auth_header: authHeader ? sanitize(authHeader, 'bearer') : undefined
+  });
+  
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    logError('OIDC', 'Invalid authorization header', { authHeader });
     return res.status(401).json({ error: 'invalid_token' });
   }
 
   const token = authHeader.substring(7);
+  logDebug('OIDC', 'Validating access token', { token: sanitize(token, 'token') });
+  
   try {
     const steamId = await validateAccessToken(token);
     if (!steamId) {
+      logError('OIDC', 'Invalid access token', { token: sanitize(token, 'token') });
       return res.status(401).json({ error: 'invalid_token' });
     }
+    
+    logDebug('OIDC', 'Access token validated', { steamId });
     const user = await getUserInfo(steamId);
+    
+    logDebug('OIDC', 'Returning user info', { 
+      steamId: user.steamid,
+      personaname: user.personaname 
+    });
+    
     res.json({
       sub: user.steamid,
       name: user.personaname,
@@ -137,6 +221,7 @@ router.get('/userinfo', async (req, res) => {
       profile: user.profileurl
     });
   } catch (error) {
+    logError('OIDC', 'Error fetching user info', error);
     res.status(500).json({ error: 'server_error' });
   }
 });

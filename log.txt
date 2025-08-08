@@ -1,0 +1,509 @@
+
+> steam-auth-proxy@1.0.0 dev
+> nodemon src/server.ts
+
+[33m[nodemon] 3.1.10[39m
+[33m[nodemon] to restart at any time, enter `rs`[39m
+[33m[nodemon] watching path(s): *.*[39m
+[33m[nodemon] watching extensions: ts,json[39m
+[32m[nodemon] starting `ts-node src/server.ts`[39m
+[dotenv@17.2.1] injecting env (12) from .env -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+/home/catalysm/code/steam-auth-proxy/node_modules/ts-node/src/index.ts:859
+    return new TSError(diagnosticText, diagnosticCodes, diagnostics);
+           ^
+TSError: ⨯ Unable to compile TypeScript:
+src/services/steamAuth.ts(18,5): error TS2554: Expected 5 arguments, but got 6.
+src/services/steamAuth.ts(27,22): error TS2339: Property 'stack' does not exist on type 'OpenIdError'.
+src/services/steamAuth.ts(28,21): error TS2339: Property 'name' does not exist on type 'OpenIdError'.
+src/services/steamAuth.ts(49,5): error TS2554: Expected 5 arguments, but got 6.
+
+    at createTSError (/home/catalysm/code/steam-auth-proxy/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/home/catalysm/code/steam-auth-proxy/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/home/catalysm/code/steam-auth-proxy/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/home/catalysm/code/steam-auth-proxy/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/home/catalysm/code/steam-auth-proxy/node_modules/ts-node/src/index.ts:1617:30)
+    at node:internal/modules/cjs/loader:1824:10
+    at Object.require.extensions.<computed> [as .ts] (/home/catalysm/code/steam-auth-proxy/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1427:32)
+    at Module._load (node:internal/modules/cjs/loader:1250:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14) {
+  diagnosticCodes: [ 2554, 2339, 2339, 2554 ]
+}
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node src/server.ts`[39m
+[dotenv@17.2.1] injecting env (12) from .env -- tip: ⚙️  write to custom object with { processEnv: myObject }
+/home/catalysm/code/steam-auth-proxy/node_modules/ts-node/src/index.ts:859
+    return new TSError(diagnosticText, diagnosticCodes, diagnostics);
+           ^
+TSError: ⨯ Unable to compile TypeScript:
+src/services/steamAuth.ts(44,5): error TS2554: Expected 5 arguments, but got 6.
+
+    at createTSError (/home/catalysm/code/steam-auth-proxy/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/home/catalysm/code/steam-auth-proxy/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/home/catalysm/code/steam-auth-proxy/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/home/catalysm/code/steam-auth-proxy/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/home/catalysm/code/steam-auth-proxy/node_modules/ts-node/src/index.ts:1617:30)
+    at node:internal/modules/cjs/loader:1824:10
+    at Object.require.extensions.<computed> [as .ts] (/home/catalysm/code/steam-auth-proxy/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1427:32)
+    at Module._load (node:internal/modules/cjs/loader:1250:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14) {
+  diagnosticCodes: [ 2554 ]
+}
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node src/server.ts`[39m
+[dotenv@17.2.1] injecting env (12) from .env -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+Server is running on https://localhost:19000
+GET /.well-known/openid-configuration
+GET /authorize?client_id=steam-auth-proxy&redirect_uri=https://devbox:19000&response_type=code&scope=openid%20profile&state=test_state&nonce=test_nonce
+getAuthUrl called with: {
+  returnUrl: 'https://devbox:19000/auth/steam/return',
+  steamRealm: 'https://devbox:19000'
+}
+Generated auth URL: https://steamcommunity.com/openid/login?openid.mode=checkid_setup&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.return_to=https%3A%2F%2Fdevbox%3A19000%2Fauth%2Fsteam%2Freturn&openid.realm=https%3A%2F%2Fdevbox%3A19000
+GET /
+GET /css/test-client.css
+GET /js/test-client.js
+GET /.well-known/openid-configuration
+GET /favicon.ico
+GET /authorize?client_id=steam-auth-proxy&redirect_uri=https://devbox:19000&response_type=code&scope=openid%20profile&state=some_state&nonce=some_nonce&code_challenge=ptsx7xheChsAIYpwY2NiAdc-Of1rLe3odr7tyIAcVks&code_challenge_method=S256
+getAuthUrl called with: {
+  returnUrl: 'https://devbox:19000/auth/steam/return',
+  steamRealm: 'https://devbox:19000'
+}
+Generated auth URL: https://steamcommunity.com/openid/login?openid.mode=checkid_setup&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.return_to=https%3A%2F%2Fdevbox%3A19000%2Fauth%2Fsteam%2Freturn&openid.realm=https%3A%2F%2Fdevbox%3A19000
+GET /auth/steam/return?openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.mode=id_res&openid.op_endpoint=https%3A%2F%2Fsteamcommunity.com%2Fopenid%2Flogin&openid.claimed_id=https%3A%2F%2Fsteamcommunity.com%2Fopenid%2Fid%2F76561198028175941&openid.identity=https%3A%2F%2Fsteamcommunity.com%2Fopenid%2Fid%2F76561198028175941&openid.return_to=https%3A%2F%2Fdevbox%3A19000%2Fauth%2Fsteam%2Freturn&openid.response_nonce=2025-08-03T15%3A04%3A03ZoEwxo0lDlm%2FRDNxODsRnFF46hBY%3D&openid.assoc_handle=1234567890&openid.signed=signed%2Cop_endpoint%2Cclaimed_id%2Cidentity%2Creturn_to%2Cresponse_nonce%2Cassoc_handle&openid.sig=UBO%2FDkKX918%2FwrsJIZyYkvPQZoo%3D
+Steam callback received with query: [Object: null prototype] {
+  'openid.ns': 'http://specs.openid.net/auth/2.0',
+  'openid.mode': 'id_res',
+  'openid.op_endpoint': 'https://steamcommunity.com/openid/login',
+  'openid.claimed_id': 'https://steamcommunity.com/openid/id/76561198028175941',
+  'openid.identity': 'https://steamcommunity.com/openid/id/76561198028175941',
+  'openid.return_to': 'https://devbox:19000/auth/steam/return',
+  'openid.response_nonce': '2025-08-03T15:04:03ZoEwxo0lDlm/RDNxODsRnFF46hBY=',
+  'openid.assoc_handle': '1234567890',
+  'openid.signed': 'signed,op_endpoint,claimed_id,identity,return_to,response_nonce,assoc_handle',
+  'openid.sig': 'UBO/DkKX918/wrsJIZyYkvPQZoo='
+}
+Error in Steam callback: TypeError: Cannot read properties of undefined (reading 'toUpperCase')
+    at Object.openid.verifyAssertion (/home/catalysm/code/steam-auth-proxy/node_modules/openid/openid.js:754:29)
+    at openid.RelyingParty.verifyAssertion (/home/catalysm/code/steam-auth-proxy/node_modules/openid/openid.js:67:10)
+    at /home/catalysm/code/steam-auth-proxy/src/services/steamAuth.ts:47:18
+    at new Promise (<anonymous>)
+    at verifyAssertion (/home/catalysm/code/steam-auth-proxy/src/services/steamAuth.ts:46:10)
+    at /home/catalysm/code/steam-auth-proxy/src/routes/steam-callback.ts:12:42
+    at Layer.handleRequest (/home/catalysm/code/steam-auth-proxy/node_modules/router/lib/layer.js:152:17)
+    at next (/home/catalysm/code/steam-auth-proxy/node_modules/router/lib/route.js:157:13)
+    at Route.dispatch (/home/catalysm/code/steam-auth-proxy/node_modules/router/lib/route.js:117:3)
+    at handle (/home/catalysm/code/steam-auth-proxy/node_modules/router/index.js:435:11)
+GET /favicon.ico
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node src/server.ts`[39m
+[dotenv@17.2.1] injecting env (12) from .env -- tip: 📡 auto-backup env with Radar: https://dotenvx.com/radar
+/home/catalysm/code/steam-auth-proxy/node_modules/ts-node/src/index.ts:859
+    return new TSError(diagnosticText, diagnosticCodes, diagnostics);
+           ^
+TSError: ⨯ Unable to compile TypeScript:
+src/routes/steam-callback.ts(12,43): error TS2345: Argument of type 'Request<{}, any, any, ParsedQs, Record<string, any>>' is not assignable to parameter of type 'OpenIDParams'.
+  Type 'Request<{}, any, any, ParsedQs, Record<string, any>>' is missing the following properties from type 'OpenIDParams': "openid.ns", "openid.mode", "openid.op_endpoint", "openid.claimed_id", and 6 more.
+
+    at createTSError (/home/catalysm/code/steam-auth-proxy/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/home/catalysm/code/steam-auth-proxy/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/home/catalysm/code/steam-auth-proxy/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/home/catalysm/code/steam-auth-proxy/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/home/catalysm/code/steam-auth-proxy/node_modules/ts-node/src/index.ts:1617:30)
+    at node:internal/modules/cjs/loader:1824:10
+    at Object.require.extensions.<computed> [as .ts] (/home/catalysm/code/steam-auth-proxy/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1427:32)
+    at Module._load (node:internal/modules/cjs/loader:1250:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14) {
+  diagnosticCodes: [ 2345 ]
+}
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node src/server.ts`[39m
+[dotenv@17.2.1] injecting env (12) from .env -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+/home/catalysm/code/steam-auth-proxy/node_modules/ts-node/src/index.ts:859
+    return new TSError(diagnosticText, diagnosticCodes, diagnostics);
+           ^
+TSError: ⨯ Unable to compile TypeScript:
+src/routes/steam-callback.ts(12,43): error TS2345: Argument of type 'Request<{}, any, any, ParsedQs, Record<string, any>>' is not assignable to parameter of type 'OpenIDParams'.
+  Type 'Request<{}, any, any, ParsedQs, Record<string, any>>' is missing the following properties from type 'OpenIDParams': "openid.ns", "openid.mode", "openid.op_endpoint", "openid.claimed_id", and 6 more.
+
+    at createTSError (/home/catalysm/code/steam-auth-proxy/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/home/catalysm/code/steam-auth-proxy/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/home/catalysm/code/steam-auth-proxy/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/home/catalysm/code/steam-auth-proxy/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/home/catalysm/code/steam-auth-proxy/node_modules/ts-node/src/index.ts:1617:30)
+    at node:internal/modules/cjs/loader:1824:10
+    at Object.require.extensions.<computed> [as .ts] (/home/catalysm/code/steam-auth-proxy/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1427:32)
+    at Module._load (node:internal/modules/cjs/loader:1250:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14) {
+  diagnosticCodes: [ 2345 ]
+}
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node src/server.ts`[39m
+[dotenv@17.2.1] injecting env (12) from .env -- tip: ⚙️  override existing env vars with { override: true }
+Server is running on https://localhost:19000
+GET /auth/steam/return?openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.mode=id_res&openid.op_endpoint=https%3A%2F%2Fsteamcommunity.com%2Fopenid%2Flogin&openid.claimed_id=https%3A%2F%2Fsteamcommunity.com%2Fopenid%2Fid%2F76561198028175941&openid.identity=https%3A%2F%2Fsteamcommunity.com%2Fopenid%2Fid%2F76561198028175941&openid.return_to=https%3A%2F%2Fdevbox%3A19000%2Fauth%2Fsteam%2Freturn&openid.response_nonce=2025-08-03T15%3A04%3A03ZoEwxo0lDlm%2FRDNxODsRnFF46hBY%3D&openid.assoc_handle=1234567890&openid.signed=signed%2Cop_endpoint%2Cclaimed_id%2Cidentity%2Creturn_to%2Cresponse_nonce%2Cassoc_handle&openid.sig=UBO%2FDkKX918%2FwrsJIZyYkvPQZoo%3D
+Steam callback received with query: [Object: null prototype] {
+  'openid.ns': 'http://specs.openid.net/auth/2.0',
+  'openid.mode': 'id_res',
+  'openid.op_endpoint': 'https://steamcommunity.com/openid/login',
+  'openid.claimed_id': 'https://steamcommunity.com/openid/id/76561198028175941',
+  'openid.identity': 'https://steamcommunity.com/openid/id/76561198028175941',
+  'openid.return_to': 'https://devbox:19000/auth/steam/return',
+  'openid.response_nonce': '2025-08-03T15:04:03ZoEwxo0lDlm/RDNxODsRnFF46hBY=',
+  'openid.assoc_handle': '1234567890',
+  'openid.signed': 'signed,op_endpoint,claimed_id,identity,return_to,response_nonce,assoc_handle',
+  'openid.sig': 'UBO/DkKX918/wrsJIZyYkvPQZoo='
+}
+Error verifying assertion: { message: 'Invalid or replayed nonce' }
+Error in Steam callback: Error: Invalid or replayed nonce
+    at /home/catalysm/code/steam-auth-proxy/src/services/steamAuth.ts:56:23
+    at _verifyAssertionData (/home/catalysm/code/steam-auth-proxy/node_modules/openid/openid.js:832:12)
+    at Object.openid.verifyAssertion (/home/catalysm/code/steam-auth-proxy/node_modules/openid/openid.js:786:10)
+    at openid.RelyingParty.verifyAssertion (/home/catalysm/code/steam-auth-proxy/node_modules/openid/openid.js:67:10)
+    at /home/catalysm/code/steam-auth-proxy/src/services/steamAuth.ts:53:18
+    at new Promise (<anonymous>)
+    at verifyAssertion (/home/catalysm/code/steam-auth-proxy/src/services/steamAuth.ts:52:10)
+    at /home/catalysm/code/steam-auth-proxy/src/routes/steam-callback.ts:12:42
+    at Layer.handleRequest (/home/catalysm/code/steam-auth-proxy/node_modules/router/lib/layer.js:152:17)
+    at next (/home/catalysm/code/steam-auth-proxy/node_modules/router/lib/route.js:157:13)
+GET /
+GET /
+GET /css/test-client.css
+GET /js/test-client.js
+GET /.well-known/openid-configuration
+GET /favicon.ico
+GET /authorize?client_id=steam-auth-proxy&redirect_uri=https://devbox:19000&response_type=code&scope=openid%20profile&state=some_state&nonce=some_nonce&code_challenge=vpFUoRi30SdtqMfeZp1LFSEu3r3SuxraLPXfK1nq59E&code_challenge_method=S256
+getAuthUrl called with: {
+  returnUrl: 'https://devbox:19000/auth/steam/return',
+  steamRealm: 'https://devbox:19000'
+}
+Generated auth URL: https://steamcommunity.com/openid/login?openid.mode=checkid_setup&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.return_to=https%3A%2F%2Fdevbox%3A19000%2Fauth%2Fsteam%2Freturn&openid.realm=https%3A%2F%2Fdevbox%3A19000
+GET /auth/steam/return?openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.mode=id_res&openid.op_endpoint=https%3A%2F%2Fsteamcommunity.com%2Fopenid%2Flogin&openid.claimed_id=https%3A%2F%2Fsteamcommunity.com%2Fopenid%2Fid%2F76561198028175941&openid.identity=https%3A%2F%2Fsteamcommunity.com%2Fopenid%2Fid%2F76561198028175941&openid.return_to=https%3A%2F%2Fdevbox%3A19000%2Fauth%2Fsteam%2Freturn&openid.response_nonce=2025-08-03T15%3A57%3A46ZBsc9GxJtb19uvvLHgNOA4%2F2EtWs%3D&openid.assoc_handle=1234567890&openid.signed=signed%2Cop_endpoint%2Cclaimed_id%2Cidentity%2Creturn_to%2Cresponse_nonce%2Cassoc_handle&openid.sig=cHh8F86TWpcXnqeVkmbBKpZ7YBA%3D
+Steam callback received with query: [Object: null prototype] {
+  'openid.ns': 'http://specs.openid.net/auth/2.0',
+  'openid.mode': 'id_res',
+  'openid.op_endpoint': 'https://steamcommunity.com/openid/login',
+  'openid.claimed_id': 'https://steamcommunity.com/openid/id/76561198028175941',
+  'openid.identity': 'https://steamcommunity.com/openid/id/76561198028175941',
+  'openid.return_to': 'https://devbox:19000/auth/steam/return',
+  'openid.response_nonce': '2025-08-03T15:57:46ZBsc9GxJtb19uvvLHgNOA4/2EtWs=',
+  'openid.assoc_handle': '1234567890',
+  'openid.signed': 'signed,op_endpoint,claimed_id,identity,return_to,response_nonce,assoc_handle',
+  'openid.sig': 'cHh8F86TWpcXnqeVkmbBKpZ7YBA='
+}
+Successfully verified Steam ID: 76561198028175941
+Redirecting to client with code: {
+  redirect_uri: 'https://devbox:19000',
+  code: '07788337ac5ae849ea181e878fbbe57e27db50f6323d0afb141de3a8e29b80a2',
+  state: 'some_state'
+}
+GET /?code=07788337ac5ae849ea181e878fbbe57e27db50f6323d0afb141de3a8e29b80a2&state=some_state
+GET /css/test-client.css
+GET /js/test-client.js
+GET /favicon.ico
+GET /.well-known/openid-configuration
+GET /.well-known/openid-configuration
+POST /token
+GET /.well-known/openid-configuration
+GET /authorize?client_id=steam-auth-proxy&redirect_uri=https://devbox:19000&response_type=code&scope=openid%20profile&state=some_state&nonce=some_nonce&code_challenge=WzkzBjL4PBSJ27XkAy7vIeA1V_96xeABNxHIoKLwuRk&code_challenge_method=S256
+getAuthUrl called with: {
+  returnUrl: 'https://devbox:19000/auth/steam/return',
+  steamRealm: 'https://devbox:19000'
+}
+Generated auth URL: https://steamcommunity.com/openid/login?openid.mode=checkid_setup&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.return_to=https%3A%2F%2Fdevbox%3A19000%2Fauth%2Fsteam%2Freturn&openid.realm=https%3A%2F%2Fdevbox%3A19000
+GET /auth/steam/return?openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.mode=id_res&openid.op_endpoint=https%3A%2F%2Fsteamcommunity.com%2Fopenid%2Flogin&openid.claimed_id=https%3A%2F%2Fsteamcommunity.com%2Fopenid%2Fid%2F76561198028175941&openid.identity=https%3A%2F%2Fsteamcommunity.com%2Fopenid%2Fid%2F76561198028175941&openid.return_to=https%3A%2F%2Fdevbox%3A19000%2Fauth%2Fsteam%2Freturn&openid.response_nonce=2025-08-03T15%3A59%3A02ZqAbt9lLWEOeYq%2Fx6VYgJAOWBYi4%3D&openid.assoc_handle=1234567890&openid.signed=signed%2Cop_endpoint%2Cclaimed_id%2Cidentity%2Creturn_to%2Cresponse_nonce%2Cassoc_handle&openid.sig=URfBx6MsGs3BqjH%2BRsNqFrJINu8%3D
+Steam callback received with query: [Object: null prototype] {
+  'openid.ns': 'http://specs.openid.net/auth/2.0',
+  'openid.mode': 'id_res',
+  'openid.op_endpoint': 'https://steamcommunity.com/openid/login',
+  'openid.claimed_id': 'https://steamcommunity.com/openid/id/76561198028175941',
+  'openid.identity': 'https://steamcommunity.com/openid/id/76561198028175941',
+  'openid.return_to': 'https://devbox:19000/auth/steam/return',
+  'openid.response_nonce': '2025-08-03T15:59:02ZqAbt9lLWEOeYq/x6VYgJAOWBYi4=',
+  'openid.assoc_handle': '1234567890',
+  'openid.signed': 'signed,op_endpoint,claimed_id,identity,return_to,response_nonce,assoc_handle',
+  'openid.sig': 'URfBx6MsGs3BqjH+RsNqFrJINu8='
+}
+Successfully verified Steam ID: 76561198028175941
+Redirecting to client with code: {
+  redirect_uri: 'https://devbox:19000',
+  code: 'f60f6670c58b1e3efbc19bca14950abb7d7bf4d0e89f0c3faa7439bc3704bdb8',
+  state: 'some_state'
+}
+GET /?code=f60f6670c58b1e3efbc19bca14950abb7d7bf4d0e89f0c3faa7439bc3704bdb8&state=some_state
+GET /css/test-client.css
+GET /js/test-client.js
+GET /.well-known/openid-configuration
+GET /.well-known/openid-configuration
+GET /favicon.ico
+POST /token
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node src/server.ts`[39m
+[dotenv@17.2.1] injecting env (12) from .env -- tip: 📡 version env with Radar: https://dotenvx.com/radar
+Server is running on https://localhost:19000
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node src/server.ts`[39m
+[dotenv@17.2.1] injecting env (12) from .env -- tip: ⚙️  suppress all logs with { quiet: true }
+Server is running on https://localhost:19000
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node src/server.ts`[39m
+[dotenv@17.2.1] injecting env (12) from .env -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+Server is running on https://localhost:19000
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node src/server.ts`[39m
+[dotenv@17.2.1] injecting env (12) from .env -- tip: 📡 observe env with Radar: https://dotenvx.com/radar
+Server is running on https://localhost:19000
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node src/server.ts`[39m
+[dotenv@17.2.1] injecting env (12) from .env -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+Server is running on https://localhost:19000
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node src/server.ts`[39m
+[dotenv@17.2.1] injecting env (12) from .env -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+/home/catalysm/code/steam-auth-proxy/node_modules/ts-node/src/index.ts:859
+    return new TSError(diagnosticText, diagnosticCodes, diagnostics);
+           ^
+TSError: ⨯ Unable to compile TypeScript:
+src/routes/steam-callback.ts(28,37): error TS2339: Property 'oidc' does not exist on type 'Session & Partial<SessionData>'.
+
+    at createTSError (/home/catalysm/code/steam-auth-proxy/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/home/catalysm/code/steam-auth-proxy/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/home/catalysm/code/steam-auth-proxy/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/home/catalysm/code/steam-auth-proxy/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/home/catalysm/code/steam-auth-proxy/node_modules/ts-node/src/index.ts:1617:30)
+    at node:internal/modules/cjs/loader:1824:10
+    at Object.require.extensions.<computed> [as .ts] (/home/catalysm/code/steam-auth-proxy/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1427:32)
+    at Module._load (node:internal/modules/cjs/loader:1250:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14) {
+  diagnosticCodes: [ 2339 ]
+}
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node src/server.ts`[39m
+[dotenv@17.2.1] injecting env (12) from .env -- tip: 📡 observe env with Radar: https://dotenvx.com/radar
+/home/catalysm/code/steam-auth-proxy/node_modules/ts-node/src/index.ts:859
+    return new TSError(diagnosticText, diagnosticCodes, diagnostics);
+           ^
+TSError: ⨯ Unable to compile TypeScript:
+src/routes/steam-callback.ts(30,37): error TS2339: Property 'oidc' does not exist on type 'Session & Partial<SessionData>'.
+
+    at createTSError (/home/catalysm/code/steam-auth-proxy/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/home/catalysm/code/steam-auth-proxy/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/home/catalysm/code/steam-auth-proxy/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/home/catalysm/code/steam-auth-proxy/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/home/catalysm/code/steam-auth-proxy/node_modules/ts-node/src/index.ts:1617:30)
+    at node:internal/modules/cjs/loader:1824:10
+    at Object.require.extensions.<computed> [as .ts] (/home/catalysm/code/steam-auth-proxy/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1427:32)
+    at Module._load (node:internal/modules/cjs/loader:1250:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14) {
+  diagnosticCodes: [ 2339 ]
+}
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node src/server.ts`[39m
+[dotenv@17.2.1] injecting env (12) from .env -- tip: 📡 version env with Radar: https://dotenvx.com/radar
+Server is running on https://localhost:19000
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node src/server.ts`[39m
+[dotenv@17.2.1] injecting env (12) from .env -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+Server is running on https://localhost:19000
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node src/server.ts`[39m
+[dotenv@17.2.1] injecting env (12) from .env -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+Server is running on https://localhost:19000
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node src/server.ts`[39m
+[dotenv@17.2.1] injecting env (12) from .env -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+=== Steam Auth Proxy Configuration ===
+Port: 19000
+HTTPS Enabled: true
+Base URL: https://devbox:19000
+Steam Return URL: https://devbox:19000/auth/steam/return
+OIDC Issuer: https://devbox:19000
+OIDC Client ID: stea****roxy
+OIDC Client Secret: [CONFIGURED]
+Steam API Key: 563B****DDE0
+Session Secret: [CONFIGURED]
+Session Name: steam_auth_session
+=====================================
+Server is running on https://localhost:19000
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node src/server.ts`[39m
+[dotenv@17.2.1] injecting env (12) from .env -- tip: 📡 version env with Radar: https://dotenvx.com/radar
+=== Steam Auth Proxy Configuration ===
+Port: 19000
+HTTPS Enabled: true
+Base URL: https://devbox:19000
+Steam Return URL: https://devbox:19000/auth/steam/return
+OIDC Issuer: https://devbox:19000
+OIDC Client ID: stea****roxy
+OIDC Client Secret: [CONFIGURED]
+Steam API Key: 563B****DDE0
+Session Secret: [CONFIGURED]
+Session Name: steam_auth_session
+=====================================
+Server is running on https://localhost:19000
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node src/server.ts`[39m
+[dotenv@17.2.1] injecting env (12) from .env -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+=== Steam Auth Proxy Configuration ===
+Port: 19000
+HTTPS Enabled: true
+Base URL: https://devbox:19000
+Steam Return URL: https://devbox:19000/auth/steam/return
+OIDC Issuer: https://devbox:19000
+OIDC Client ID: stea****roxy
+OIDC Client Secret: [CONFIGURED]
+Steam API Key: 563B****DDE0
+Session Secret: [CONFIGURED]
+Session Name: steam_auth_session
+=====================================
+Server is running on https://localhost:19000
+GET /
+[OIDC] Loading client config: { client_id: 'stea****roxy' }
+GET /css/test-client.css
+GET /js/test-client.js
+GET /.well-known/openid-configuration
+[OIDC] Loading client config: { client_id: 'stea****roxy' }
+GET /favicon.ico
+[OIDC] Loading client config: { client_id: 'stea****roxy' }
+GET /.well-known/openid-configuration
+[OIDC] Loading client config: { client_id: 'stea****roxy' }
+GET /authorize?client_id=steam-auth-proxy&redirect_uri=https://devbox:19000&response_type=code&scope=openid%20profile&state=some_state&nonce=some_nonce&code_challenge=ZD9Sfx5MiC3IumEwU5HRlq8GyGsFu73s2iilvJDgoi4&code_challenge_method=S256
+[OIDC] Loading client config: { client_id: 'stea****roxy' }
+[OIDC] /authorize called: {
+  client_id: 'stea****roxy',
+  redirect_uri: 'https://devbox:19000',
+  response_type: 'code',
+  scope: 'openid profile',
+  state: 'some_state',
+  nonce: 'nonce[***]'
+}
+[OIDC] Client validated successfully
+[OIDC] Redirect URI validated
+[OIDC] Generating Steam auth URL
+[SteamAuth] getAuthUrl called: {
+  returnUrl: 'https://devbox:19000/auth/steam/return',
+  steamRealm: 'https://devbox:19000',
+  steamOpenIdUrl: 'https://steamcommunity.com/openid'
+}
+[SteamAuth] RelyingParty created: { stateless: true, strict: true }
+[SteamAuth] Auth URL generated successfully: { url_length: 390, has_openid_params: true }
+[OIDC] Session data stored: { client_id: 'stea****roxy', has_state: true, has_nonce: true }
+[OIDC] Redirecting to Steam auth
+GET /auth/steam/return?openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.mode=id_res&openid.op_endpoint=https%3A%2F%2Fsteamcommunity.com%2Fopenid%2Flogin&openid.claimed_id=https%3A%2F%2Fsteamcommunity.com%2Fopenid%2Fid%2F76561198028175941&openid.identity=https%3A%2F%2Fsteamcommunity.com%2Fopenid%2Fid%2F76561198028175941&openid.return_to=https%3A%2F%2Fdevbox%3A19000%2Fauth%2Fsteam%2Freturn&openid.response_nonce=2025-08-08T13%3A46%3A19ZhWRCByxBtbQ%2BOr5wIOoythO%2FhX0%3D&openid.assoc_handle=1234567890&openid.signed=signed%2Cop_endpoint%2Cclaimed_id%2Cidentity%2Creturn_to%2Cresponse_nonce%2Cassoc_handle&openid.sig=F2mLQZkv8%2BCtOygOPWcelb5ovj4%3D
+[OIDC] Loading client config: { client_id: 'stea****roxy' }
+[Steam] Callback received: {
+  query_params: [
+    'openid.ns',
+    'openid.mode',
+    'openid.op_endpoint',
+    'openid.claimed_id',
+    'openid.identity',
+    'openid.return_to',
+    'openid.response_nonce',
+    'openid.assoc_handle',
+    'openid.signed',
+    'openid.sig'
+  ],
+  has_openid_params: true
+}
+[Steam] Verifying Steam assertion
+[SteamAuth] verifyAssertion called: {
+  returnUrl: 'https://devbox:19000/auth/steam/return',
+  isRequest: true,
+  has_claimed_id: true
+}
+[SteamAuth] Calling verifyAssertion
+[SteamAuth] Successfully verified Steam ID: {
+  steamId: '76561198028175941',
+  claimedIdentifier: 'https://steamcommunity.com/openid/id/76561198028175941'
+}
+[Steam] Steam ID verified: { steamId: '76561198028175941' }
+[Steam] Retrieved session data: {
+  client_id: 'stea****roxy',
+  redirect_uri: 'https://devbox:19000',
+  has_state: true,
+  has_nonce: true,
+  session_exists: true
+}
+[Steam] Generating auth code
+[OIDCProvider] Generating auth code: {
+  code: 'a0f3****4186',
+  steamId: '76561198028175941',
+  clientId: 'stea****roxy',
+  redirectUri: 'https://devbox:19000',
+  has_nonce: true,
+  expires_in: '10 minutes'
+}
+[Steam] Redirecting to client: {
+  redirect_uri: 'https://devbox:19000',
+  code: 'a0f3****4186',
+  state: 'some_state',
+  full_url: 'https://devbox:19000/?code=a0f3e91f79b45fdbc420b2e8dfd1fd876c4e6766b7e4b3ceb28539fd5d184186&state=some_state'
+}
+GET /?code=a0f3e91f79b45fdbc420b2e8dfd1fd876c4e6766b7e4b3ceb28539fd5d184186&state=some_state
+[OIDC] Loading client config: { client_id: 'stea****roxy' }
+GET /css/test-client.css
+GET /js/test-client.js
+GET /.well-known/openid-configuration
+[OIDC] Loading client config: { client_id: 'stea****roxy' }
+GET /.well-known/openid-configuration
+[OIDC] Loading client config: { client_id: 'stea****roxy' }
+POST /token
+[OIDC] Loading client config: { client_id: 'stea****roxy' }
+[OIDC] /token called: {
+  grant_type: 'authorization_code',
+  code: 'a0f3****4186',
+  redirect_uri: 'https://devbox:19000',
+  client_id: 'stea****roxy',
+  client_secret: '[REDACTED]'
+}
+[OIDC] Client authenticated successfully
+[OIDCProvider] Validating auth code: {
+  code: 'a0f3****4186',
+  clientId: 'stea****roxy',
+  code_found: true,
+  client_matches: true,
+  is_expired: false,
+  time_remaining: '9m 59s'
+}
+[OIDCProvider] Auth code validated successfully, removing from store
+[OIDC] Auth code validated: { steamId: '76561198028175941', has_nonce: true }
+[OIDC] Fetching Steam user info: { steamId: '76561198028175941' }
+[SteamAuth] Fetching Steam user info: {
+  steamId: '76561198028175941',
+  api_key: '563B****DDE0',
+  url: 'http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=563B****DDE0&steamids=76561198028175941'
+}
+[SteamAuth] Steam API response received: { status: 200, has_players: true, player_count: 1 }
+[SteamAuth] User info retrieved: {
+  steamId: '76561198028175941',
+  personaname: 'Catalysm',
+  profileurl: 'https://steamcommunity.com/profiles/76561198028175941/'
+}
+[OIDC] Generating tokens
+[OIDCProvider] Generating ID token: {
+  issuer: 'https://devbox:19000',
+  subject: '76561198028175941',
+  audience: 'stea****roxy',
+  has_nonce: true,
+  expires_in: '1 hour'
+}
+[OIDCProvider] ID token generated: { token_preview: 'eyJh****co1Q' }
+[OIDCProvider] Generating access token: { steamId: '76561198028175941', token: '2b5b****cf4d' }
+[OIDC] Tokens generated successfully: {
+  access_token: '2b5b****cf4d',
+  id_token: 'eyJh****co1Q',
+  steamId: '76561198028175941'
+}

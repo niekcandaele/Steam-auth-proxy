@@ -10,7 +10,7 @@
     "type-check": "tsc --noEmit",
     "test": "echo \"Error: no test specified\" && exit 1",
     "docker:build": "docker build -t steam-auth-proxy .",
-    "docker:run": "docker run -p 3000:3000 --env-file .env steam-auth-proxy"
+    "docker:run": "docker run -p 19000:19000 --env-file .env steam-auth-proxy"
   },
   "author": "",
   "license": "ISC",
@@ -21,7 +21,8 @@
     "express": "^5.1.0",
     "express-session": "^1.18.2",
     "jose": "^6.0.12",
-    "openid": "^2.0.13"
+    "openid": "^2.0.13",
+    "self-signed": "^1.3.1"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
@@ -30,7 +31,6 @@
     "@types/node": "^24.1.0",
     "@types/openid": "^2.0.5",
     "nodemon": "^3.1.10",
-    "self-signed": "^1.3.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.2"
   }

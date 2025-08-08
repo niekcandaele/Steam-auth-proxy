@@ -1,8 +1,7 @@
-version: '3.8'
 services:
   steam-auth-proxy:
     build: .
     ports:
-      - "3000:3000"
+      - "19001:19000"  # Map external port 19001 to container port 19000
     env_file:
       - .env
