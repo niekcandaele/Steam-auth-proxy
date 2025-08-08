@@ -6,8 +6,15 @@
 </head>
 <body>
   <h1>OIDC Test Client</h1>
-  <button id="discover-btn">Test Discovery</button>
-  <button id="auth-btn">Start Authorization</button>
+  <div class="config-section">
+    <label for="client-secret">Client Secret:</label>
+    <input type="password" id="client-secret" placeholder="Enter client secret">
+    <small>Check server logs for generated secret or use OIDC_CLIENT_SECRET env var</small>
+  </div>
+  <div class="button-section">
+    <button id="discover-btn">Test Discovery</button>
+    <button id="auth-btn">Start Authorization</button>
+  </div>
   <hr>
   <h2>Results</h2>
   <pre id="results"></pre>

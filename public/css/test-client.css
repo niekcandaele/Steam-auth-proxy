@@ -1,9 +1,67 @@
 body {
   font-family: sans-serif;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+h1 {
+  color: #333;
+}
+
+.config-section {
+  margin: 20px 0;
+  padding: 15px;
+  background-color: #f9f9f9;
+  border-radius: 5px;
+}
+
+.config-section label {
+  display: inline-block;
+  font-weight: bold;
+  margin-right: 10px;
+  min-width: 120px;
+}
+
+.config-section input {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  width: 300px;
+}
+
+.config-section small {
+  display: block;
+  margin-top: 8px;
+  margin-left: 130px;
+  color: #666;
+  font-size: 12px;
+}
+
+.button-section {
+  margin: 20px 0;
+}
+
+button {
+  padding: 10px 20px;
+  margin-right: 10px;
+  font-size: 14px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
 }
 
 pre {
   background-color: #f4f4f4;
   padding: 1em;
   border: 1px solid #ccc;
+  border-radius: 4px;
+  overflow-x: auto;
 }

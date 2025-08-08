@@ -43,6 +43,14 @@ document.addEventListener('DOMContentLoaded', () => {
       await discover();
     }
 
+    // Store client secret for later use
+    const clientSecret = document.getElementById('client-secret').value;
+    if (!clientSecret) {
+      displayResults({ error: 'Please enter a client secret' });
+      return;
+    }
+    sessionStorage.setItem('client_secret', clientSecret);
+
     const code_verifier = generateRandomString(64);
     sessionStorage.setItem('code_verifier', code_verifier);
     const code_challenge = base64urlencode(await sha256(code_verifier));
@@ -62,6 +70,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const code = urlParams.get('code');
   if (code) {
     const code_verifier = sessionStorage.getItem('code_verifier');
+    const client_secret = sessionStorage.getItem('client_secret');
+    
+    if (!client_secret) {
+      displayResults({ error: 'Client secret not found. Please start authorization again.' });
+      return;
+    }
+    
     // We need to discover the config again to get the issuer for the token exchange
     discover().then(() => {
       fetch(oidcConfig.token_endpoint, {
@@ -74,7 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
           code,
           redirect_uri: oidcConfig.issuer,
           client_id: 'steam-auth-client',
-          client_secret: 'test-secret',
+          client_secret: client_secret,
           code_verifier
         })
       })
@@ -84,6 +99,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Restore client secret from session if available
+  const savedSecret = sessionStorage.getItem('client_secret');
+  if (savedSecret) {
+    document.getElementById('client-secret').value = savedSecret;
+  }
+  
   // Discover on page load
   discover();
 });
