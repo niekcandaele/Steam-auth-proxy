@@ -7,7 +7,6 @@ import cors from 'cors';
 import path from 'path';
 import https from 'https';
 import http from 'http';
-import selfsigned from 'self-signed';
 
 const app = express();
 
@@ -48,9 +47,17 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 let server: http.Server | https.Server;
 
 if (config.localHttps) {
-  const pems = selfsigned.generate(null, { days: 365 });
-  server = https.createServer({ key: pems.private, cert: pems.cert }, app).listen(config.port, () => {
-    console.log(`Server is running on https://localhost:${config.port}`);
+  import('self-signed').then(selfsigned => {
+    const pems = selfsigned.default.generate(null, { days: 365 });
+    server = https.createServer({ key: pems.private, cert: pems.cert }, app).listen(config.port, () => {
+      console.log(`Server is running on https://localhost:${config.port}`);
+    });
+  }).catch(err => {
+    console.error('Failed to load self-signed module:', err);
+    console.error('Falling back to HTTP');
+    server = app.listen(config.port, () => {
+      console.log(`Server is running on http://localhost:${config.port}`);
+    });
   });
 } else {
   server = app.listen(config.port, () => {
