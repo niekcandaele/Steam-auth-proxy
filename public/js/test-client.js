@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
     sessionStorage.setItem('code_verifier', code_verifier);
     const code_challenge = base64urlencode(await sha256(code_verifier));
 
-    const clientId = 'steam-auth-proxy';
+    const clientId = 'steam-auth-client';
     const redirectUri = oidcConfig.issuer;
     const responseType = 'code';
     const scope = 'openid profile';
@@ -73,8 +73,8 @@ document.addEventListener('DOMContentLoaded', () => {
           grant_type: 'authorization_code',
           code,
           redirect_uri: oidcConfig.issuer,
-          client_id: 'steam-auth-proxy',
-          client_secret: 'your_client_secret_here',
+          client_id: 'steam-auth-client',
+          client_secret: 'test-secret',
           code_verifier
         })
       })

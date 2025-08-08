@@ -16,8 +16,6 @@ export const config = {
   steamApiKey: process.env.STEAM_API_KEY,
   steamRealm: process.env.BASE_URL as string,
   steamReturnUrl: `${process.env.BASE_URL}/auth/steam/return`,
-  oidcClientId: process.env.OIDC_CLIENT_ID,
-  oidcClientSecret: process.env.OIDC_CLIENT_SECRET,
   oidcIssuer: process.env.BASE_URL as string,
   sessionSecret: process.env.SESSION_SECRET,
   sessionName: process.env.SESSION_NAME,
@@ -36,8 +34,6 @@ console.log(`HTTPS Enabled: ${config.localHttps}`);
 console.log(`Base URL: ${config.baseUrl}`);
 console.log(`Steam Return URL: ${config.steamReturnUrl}`);
 console.log(`OIDC Issuer: ${config.oidcIssuer}`);
-console.log(`OIDC Client ID: ${sanitize(config.oidcClientId, 'client')}`);
-console.log(`OIDC Client Secret: ${config.oidcClientSecret ? '[CONFIGURED]' : '[NOT SET]'}`);
 console.log(`Steam API Key: ${sanitize(config.steamApiKey, 'key')}`);
 console.log(`Session Secret: ${config.sessionSecret ? '[CONFIGURED]' : '[NOT SET]'}`);
 console.log(`Session Name: ${config.sessionName || 'steam_auth_session'}`);

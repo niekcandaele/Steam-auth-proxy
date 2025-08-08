@@ -6,28 +6,29 @@ import { exportJWK } from 'jose';
 import { clientStore } from '../services/storage';
 import { config } from '../config';
 import { logDebug, logError, sanitize, sanitizeSecret } from '../utils/logging';
+import { generateSecureCode } from '../services/crypto';
 
 const router = Router();
 
-const loadClientConfig = (req: Request, res: Response, next: NextFunction) => {
-  // In a real app, you would load this from a database
-  const clientId = config.oidcClientId || '';
-  logDebug('OIDC', 'Loading client config', { 
-    client_id: sanitize(clientId, 'client') 
-  });
-  
-  clientStore.set(clientId, {
-    client_id: clientId,
-    client_secret: config.oidcClientSecret || '',
-    redirect_uris: [config.baseUrl],
-    grant_types: ['authorization_code'],
-    response_types: ['code'],
-    scope: 'openid profile'
-  });
-  next();
-};
+// Fixed client configuration
+const CLIENT_ID = 'steam-auth-client';
+const CLIENT_SECRET = process.env.OIDC_CLIENT_SECRET || generateSecureCode();
 
-router.use(loadClientConfig);
+// Initialize the single client once on startup
+clientStore.set(CLIENT_ID, {
+  client_id: CLIENT_ID,
+  client_secret: CLIENT_SECRET,
+  redirect_uris: [config.baseUrl],
+  grant_types: ['authorization_code'],
+  response_types: ['code'],
+  scope: 'openid profile'
+});
+
+logDebug('OIDC', 'Client initialized', {
+  client_id: CLIENT_ID,
+  redirect_uri: config.baseUrl,
+  client_secret: sanitizeSecret(CLIENT_SECRET)
+});
 
 const sendOidcError = (res: Response, redirect_uri: string, error: string, error_description: string) => {
   if (redirect_uri) {
